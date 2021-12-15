@@ -8,6 +8,12 @@ typedef struct Robot{
 	double x;
 	double y;
 	double max_curvature_angle;
+
+	Robot(){
+		x = 0.0;
+		y = 0.0;
+		printf("Robot created");
+	}
 } Robot;
 
 typedef struct list_of_obstacles {
