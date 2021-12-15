@@ -12,7 +12,6 @@ typedef struct Robot{
 	Robot(){
 		x = 0.0;
 		y = 0.0;
-		printf("Robot created");
 	}
 } Robot;
 
