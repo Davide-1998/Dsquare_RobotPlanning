@@ -616,7 +616,7 @@ tuple <point_list *, double_list *> intersCircleLine(double a, double b, double 
 	return make_tuple(pts,t);
  }
  
- Mat plot_points(point_list * pl, Mat arena, Scalar colorline, bool isArena)
+ Mat plot_points(point_list * pl, Mat arena, Scalar colorline, bool isPolygon)
  {
 	point_node *n1 = pl->head;
 	point_node *n2;
@@ -632,7 +632,7 @@ tuple <point_list *, double_list *> intersCircleLine(double a, double b, double 
 		n1 = n1->pnext;
 	}
 	
-	if (isArena) //close the arena connecting the last point with the firts one
+	if (isPolygon) //close the polygon connecting the last point with the firts one
 		line(arena,Point((n1->x*SCALE_1)+SCALE_2,(n1->y*-SCALE_1)+SCALE_2),Point((pl->head->x*SCALE_1)+SCALE_2,(pl->head->y*-SCALE_1)+SCALE_2),colorline,1);
 	return arena;
  }
