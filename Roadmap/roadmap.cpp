@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 
-void points_map::add_arena_points(point_list ArenaPoints){
-	*arena = ArenaPoints;
+void points_map::add_arena_points(point_list *ArenaPoints){
+	arena = ArenaPoints;
 };
 
 void points_map::set_robot_position(double x, double y){

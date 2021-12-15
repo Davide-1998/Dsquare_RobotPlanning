@@ -15,10 +15,15 @@ typedef struct Robot{
 	}
 } Robot;
 
+typedef struct obstacle{
+	point_list *pl;
+	obstacle *pnext = NULL;
+}obstacle;
+
 typedef struct list_of_obstacles {
-  point_list *obstacle = NULL;
-  point_list *next = NULL;
-} list_of_obstacles;
+  obstacle *head = NULL;
+  obstacle *tail = NULL;
+}list_of_obstacles;
 
 typedef struct points_map {
   // Lists of points belonging respectively to the arena and the obstacles
@@ -29,7 +34,7 @@ typedef struct points_map {
   Robot *robot = NULL;
   point_node *goal_point = NULL;
   
-  void add_arena_points(point_list ArenaPoints);
+  void add_arena_points(point_list *ArenaPoints);
   void set_robot_position(double x, double y);
   void print_info();
   // void ~points_map();
