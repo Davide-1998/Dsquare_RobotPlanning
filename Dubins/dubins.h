@@ -19,25 +19,43 @@ using namespace std;
 
 struct double_node{
 	double value;
-	double_node *pnext;
+	double_node *pnext = NULL;
+	
+	double_node(double a){
+		value = a;
+	}
 }typedef double_node;
 
 struct double_list{
-	double_node *head;
-	double_node *tail;
-	int size;
+	double_node *head = NULL;
+	double_node *tail = NULL;
+	int size = 0;
+	
+	void add_node(double_node *);
+	void delete_list();
+	void print_list();
+	
 }typedef double_list;
 
 struct point_node{
 	double x;
 	double y;
-	point_node *pnext;
+	point_node *pnext = NULL;
+	
+	point_node(double a, double b){
+		x=a;
+		y=b;
+		}
 }typedef point_node;
 
 struct point_list{
 	point_node *head = NULL;
 	point_node *tail = NULL;
 	int size = 0;
+	
+	void add_node(point_node *);
+	void print_list();
+	void delete_list();
 	
 }typedef point_list;
 
@@ -76,14 +94,6 @@ tuple <point_list *, double_list *> intersCircleLine(double, double, double, dou
 Mat plot_points(point_list *,Mat,Scalar,bool);
 
 /*Support function*/
-double_list * initialize_double_list();
-point_list * initialize_point_list();
-void add_node(double_list *, double);
-void add_node(point_list *, double, double);
-void delete_list(double_list *);
-void delete_list(point_list *);
-void print_list(double_list *);
-void print_list(point_list *);
 void sort(double_list *, point_list *);
 
 #endif

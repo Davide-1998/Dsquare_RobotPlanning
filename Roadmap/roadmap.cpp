@@ -11,6 +11,31 @@ void points_map::set_robot_position(double x, double y){
   robot -> y = y;
 };
 
-void points_map::print_info(){
-  printf("Robot location: %0.4f - %0.4f\n", robot->x, robot->y);
+void points_map::add_obstacle(obstacle *ob){
+	if(obstacles->head == NULL)
+	{
+		obstacles->head = ob;
+		obstacles->tail = obstacles->head;
+		return;
+	}
+	obstacles->tail->pnext = ob;
+	obstacles->tail = obstacles->tail->pnext;
 };
+
+void points_map::print_info(){
+  cout<<"Robot location: " << robot->x << "- "<< robot->y <<endl;
+};
+
+Mat points_map::plot_arena(){
+	Mat img_arena(600,600, CV_8UC3, Scalar(255, 255, 255));
+	
+	img_arena = plot_points(arena, img_arena, Scalar(0,0,0),true);
+	
+	obstacle *tmp = obstacles->head;
+	while(tmp != NULL)
+	{
+		img_arena = plot_points(tmp->pl,img_arena,Scalar(0,0,255),true);
+		tmp = tmp->pnext;
+	}
+	return img_arena;
+}

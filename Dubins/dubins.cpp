@@ -3,96 +3,58 @@
 int SCALE_1=100;
 int SCALE_2=150;
 
-double_list * initialize_double_list()
+void double_list::add_node(double_node *node)
 {
-	double_list *lst = new double_list;
-	lst->head = NULL;
-	lst->tail = lst->head;
-	lst->size = 0;
-	return lst;
-}
-
-point_list * initialize_point_list()
-{
-	point_list *lst = new point_list;
-	lst->head = NULL;
-	lst->tail = lst->head;
-	lst->size = 0;
-	return lst;
-}
-
-void add_node(point_list *lst, double x, double y)
-{
-	if(lst->head==NULL)
+	size++;
+	if(head==NULL)
 	{
-		lst->head = new point_node;
-		lst->head->pnext = NULL;
-		lst->head->x = x;
-		lst->head->y = y;
-		lst->tail = lst->head;
-		lst->size += 1;
+		head = node;
+		tail = head;
 		return;
 	}
-	lst->tail->pnext = new point_node;
-	lst->tail = lst->tail->pnext;
-	lst->tail->pnext = NULL;
-	lst->tail->x = x;
-	lst->tail->y = y;	
-	lst->size += 1;	
-}
-
-void add_node(double_list *lst,double value)
-{
-	if(lst->head==NULL)
-	{
-		lst->head = new double_node;
-		lst->head->pnext = NULL;
-		lst->head->value = value;
-		lst->tail = lst->head;
-		lst->size += 1;
-		return;
-	}
-	lst->tail->pnext = new double_node;
-	lst->tail = lst->tail->pnext;
-	lst->tail->pnext = NULL;
-	lst->tail->value = value;	
-	lst->size += 1;
+	tail->pnext=node;
+	tail = tail->pnext;
 }
 
 
-void delete_list(double_list *lst)
+void double_list::print_list()
 {
-	double_node *tmp;
-	while(lst->head != NULL)
-	{
-		tmp=lst->head;
-		lst->head=lst->head->pnext;
-		delete tmp;
-	}	
-}
-void delete_list(point_list *lst)
-{
-	point_node *tmp;
-	while(lst->head != NULL)
-	{
-		tmp=lst->head;
-		lst->head=lst->head->pnext;
-		delete tmp;
-	}	
-}
-
-void print_list(double_list *lst)
-{
-	double_node *tmp = lst->head;
+	double_node *tmp = head;
 	while(tmp != NULL)
 	{
-		cout<<tmp->value;
+		cout<<"Value: "<<tmp->value<<endl;
 		tmp = tmp->pnext;
 	}
 }
-void print_list(point_list *lst)
+
+void double_list::delete_list()
 {
-	point_node *tmp = lst->head;
+	double_node *tmp;
+	while(head != NULL)
+	{
+		tmp=head;
+		head=head->pnext;
+		delete tmp;
+	}	
+	size = 0;
+}
+
+void point_list::add_node(point_node *node)
+{
+	size++;
+	if(head==NULL)
+	{
+		head = node;
+		tail = head;
+		return;
+	}
+	tail->pnext = node;
+	tail = tail->pnext;
+}
+
+void point_list::print_list()
+{
+	point_node *tmp = head;
 	int i = 0;
 	while(tmp != NULL)
 	{
@@ -102,6 +64,19 @@ void print_list(point_list *lst)
 		tmp = tmp->pnext;
 	}
 }
+
+void point_list::delete_list()
+{
+	point_node *tmp;
+	while(head != NULL)
+	{
+		tmp=head;
+		head=head->pnext;
+		delete tmp;
+	}
+	size = 0;	
+}
+
 
 void sort(double_list *t, point_list *pts)
 {
@@ -409,7 +384,7 @@ void python_plot(curve d, string c1, string c2, string c3)
 }
 
 Mat plotdubins(curve d, string c1, string c2, string c3, Mat arena)
-{		
+{	
 	arena = plotarc(d.a1, c1, arena);
 	arena = plotarc(d.a2, c2, arena);
 	arena = plotarc(d.a3, c3, arena);
@@ -422,13 +397,13 @@ Mat plotarc(arc a, string c, Mat img)
 	int npts = 100;
 	double th;
 	Point pts[npts];
-	point_list *pl = initialize_point_list();
+	point_list *pl = new point_list;
 	for(int i=0;i<npts;i++)
 	{
 		double x,y,s;
 		s = a.L/npts*i;
 		tie(x,y,th) = circline(s, a.x0, a.y0, a.k, a.th0);
-		add_node(pl,x,y);
+		pl->add_node(new point_node(x,y));
 	}
 	
 	int r=0,g=0,b=0;
@@ -452,14 +427,14 @@ Mat plotarc(arc a, string c, Mat img)
 	}
 
 	img = plot_points(pl,img,Scalar(r,g,b),false);
-	delete_list(pl);
+	pl->delete_list();
 	return img;
 }
 
 tuple <point_list *, double_list *> intersLineLine(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
 {
-	point_list *pts = initialize_point_list();
-	double_list *ts = initialize_double_list();;
+	point_list *pts = new point_list;
+	double_list *ts = new double_list;
 	double minX1, minY1, maxX1, maxY1, minX2, minY2, maxX2, maxY2;
 	double t;
 	
@@ -506,16 +481,16 @@ tuple <point_list *, double_list *> intersLineLine(double x1, double y1, double 
 		{
 			if (t0 >= 0 && t1 <= 1)
 			{
-				add_node(ts,max(t1,0.0)); 
-				add_node(ts,min(t0,1.0));
+				ts->add_node(new double_node(max(t1,0.0))); 
+				ts->add_node(new double_node(min(t0,1.0)));
 			}
 		}
 		else
 		{
 			if (t1 >= 0 && t0 <= 1)
 			{
-				add_node(ts,max(t0,0.0)); 
-				add_node(ts,min(t1,1.0));
+				ts->add_node(new double_node(max(t0,0.0))); 
+				ts->add_node(new double_node(min(t1,1.0)));
 			}
 		}
 	}
@@ -529,12 +504,12 @@ tuple <point_list *, double_list *> intersLineLine(double x1, double y1, double 
 			t = crossDiffS/crossRS;
 			double u = crossDiffR/crossRS;
 			 if (t>=0 && t<= 1 && u>=0 && u<=1)
-				add_node(ts,t);
+				ts->add_node(new double_node(t));
 	}
 	double_node *tmp = ts->head;
 	while(tmp!=NULL)
 	{
-		add_node(pts,p[0]+tmp->value*r[0], p[1]+tmp->value*r[1]);
+		pts->add_node(new point_node(p[0]+tmp->value*r[0], p[1]+tmp->value*r[1]));
 		tmp=tmp->pnext;
 	}
 	
@@ -568,8 +543,8 @@ tuple <point_list *, double_list *> intersCircleLine(double a, double b, double 
     c3 = pow(x2,2)-p4+pow(a,2)+pow(y2,2)-p6+pow(b,2)-pow(r,2);
     
     double delta = pow(c2,2) - 4*c1*c3;
-    point_list *pts = initialize_point_list();
-    double_list *t = initialize_double_list();
+    point_list *pts = new point_list;
+    double_list *t = new double_list;
     
     double t1,t2,x,y;
     double  deltaSq;
@@ -597,8 +572,8 @@ tuple <point_list *, double_list *> intersCircleLine(double a, double b, double 
 		x = x1*t1+x2*(1-t1);
 		y = y1*t1+y2*(1-t1);
 		Point pt(x,y);
-		add_node(pts,x,y);
-		add_node(t,t1);
+		pts->add_node(new point_node(x,y));
+		t->add_node(new double_node(t1));
 		cout<<"NODO AGGIUNTO\n";
 	}
 	if (t2 >=0 && t2<=1 && t2!=t1)
@@ -607,9 +582,9 @@ tuple <point_list *, double_list *> intersCircleLine(double a, double b, double 
 		y = y1*t2+y2*(1-t2);
 		Point pt(x,y);
 		cout<<typeid(pt.x).name()<<endl;
-		add_node(pts,x,y);
+		pts->add_node(new point_node(x,y));
 		
-		add_node(t,t2);
+		t->add_node(new double_node(t2));
 		cout<<"NODO AGGIUNTO\n";
 	}
 	sort(t,pts);
@@ -626,9 +601,9 @@ tuple <point_list *, double_list *> intersCircleLine(double a, double b, double 
 		Point pt1((n1->x*SCALE_1)+SCALE_2,(n1->y*-SCALE_1)+SCALE_2);
 		Point pt2((n2->x*SCALE_1)+SCALE_2,(n2->y*-SCALE_1)+SCALE_2);
 		line(arena,pt1,pt2,colorline,1);
-		cout<<"P1 x: " << n1->x<<" y: " <<n1->y <<endl;
+		/*cout<<"P1 x: " << n1->x<<" y: " <<n1->y <<endl;
 		cout<<"P2 x: " << n2->x<<" y: " <<n2->y <<endl;
-		cout<<"Line drawed\n";
+		cout<<"Line drawed\n";*/
 		n1 = n1->pnext;
 	}
 	
