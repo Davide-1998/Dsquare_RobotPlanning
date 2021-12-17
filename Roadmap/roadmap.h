@@ -2,6 +2,8 @@
 #define __ROADMAP_H__
 
 #include "../Dubins/dubins.h"
+#include <iostream>
+#include <stdio.h>
 
 typedef struct Robot{
 	char *ID = NULL;

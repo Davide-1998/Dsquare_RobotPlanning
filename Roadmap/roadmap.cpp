@@ -1,6 +1,4 @@
 #include "roadmap.h"
-#include <iostream>
-#include <stdio.h>
 
 
 void points_map::add_arena_points(point_list *ArenaPoints){

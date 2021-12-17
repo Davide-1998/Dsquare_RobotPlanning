@@ -7,7 +7,7 @@
 #include <string>
 #include <assert.h>
 #include <opencv2/opencv.hpp>
-#include "clipper/cpp/clipper.hpp"
+#include "../clipper/cpp/clipper.hpp"
 
 /*
  * Compile command:
@@ -35,9 +35,9 @@ struct point_node{
 }typedef point_node;
 
 struct point_list{
-	point_node *head;
-	point_node *tail;
-	int size;
+	point_node *head = NULL;
+	point_node *tail = NULL;
+	int size = 0;
 	
 }typedef point_list;
 
