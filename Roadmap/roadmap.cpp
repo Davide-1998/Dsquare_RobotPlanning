@@ -11,7 +11,18 @@ void points_map::set_robot_position(double x, double y){
   robot -> y = y;
 };
 
-void points_map::add_obstacle(obstacle *ob){
+void points_map::add_gate(polygon *gt){
+	if(gates->head == NULL)
+	{
+		gates->head = gt;
+		gates->tail = gates->head;
+		return;
+	}
+	gates->tail->pnext = gt;
+	gates->tail = gates->tail->pnext;
+};
+
+void points_map::add_obstacle(polygon *ob){
 	if(obstacles->head == NULL)
 	{
 		obstacles->head = ob;
@@ -31,11 +42,19 @@ Mat points_map::plot_arena(){
 	
 	img_arena = plot_points(arena, img_arena, Scalar(0,0,0),true);
 	
-	obstacle *tmp = obstacles->head;
+	polygon *tmp = obstacles->head;
 	while(tmp != NULL)
 	{
 		img_arena = plot_points(tmp->pl,img_arena,Scalar(0,0,255),true);
 		tmp = tmp->pnext;
 	}
+	
+	tmp = gates->head;
+	while(tmp != NULL)
+	{
+		img_arena = plot_points(tmp->pl,img_arena,Scalar(0,255,0),true);
+		tmp = tmp->pnext;
+	}
+	
 	return img_arena;
 }
